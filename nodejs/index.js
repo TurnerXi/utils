@@ -6,7 +6,7 @@ var iconv = require('iconv-lite');
 var mysql = require('mysql');
 
 var count = 0;//已查询条数
-var max_id = 1498936600;
+var max_id = 1499244187;
 var url = "http://www.jianshu.com/recommendations/notes?category_id=56&max_id="; 
 var domain_name = "http://www.jianshu.com/";
 
@@ -14,10 +14,10 @@ var mysql_pool = null;
 var conn_threads = [];//数据库链接线程
 var mysql_config = {
 	connectionLimit : 10,
-	host : "localhost",
-	user : "root",
-	password : "ilyf744520",
-	database : "db_node_dev"
+	host : "bdm271956257.my3w.com",
+	user : "bdm271956257",
+	password : "Lj19901107xpc",
+	database : "bdm271956257_db"
 }
 
 function start_request(){

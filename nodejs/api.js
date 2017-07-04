@@ -8,11 +8,13 @@ var conn_count = 0 ;
 var mysql_pool ; 
 var mysql_config = {
 	connectionLimit : 10,
-	host : "localhost",
-	user : "root",
-	password : "ilyf744520",
-	database : "db_node_dev"
+	host : "bdm271956257.my3w.com",
+	user : "bdm271956257",
+	password : "Lj19901107xpc",
+	database : "bdm271956257_db"
 }
+
+
 
 const server = http.createServer((req,res)=>{
 	var url = URL.parse(req.url);
@@ -21,7 +23,7 @@ const server = http.createServer((req,res)=>{
 	var sql = " select * from spider_article_list limit ?,? ";
 	var params = [0,20];
 	execute_sql(sql,params,function(results){
-		res.writeHead(200, { 'Content-Type': 'text/json' });
+		res.writeHead(200, { 'Content-Type': 'text/json; charset=utf-8' });
 		res.write(JSON.stringify(results));
 		res.end();
 	});
