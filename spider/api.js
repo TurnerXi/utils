@@ -13,19 +13,58 @@ var mysql_config = {
 	password : "ilyf744520",
 	database : "db_node_dev"
 }
+var Router = {
+	10000:query_article_list,
+	11000:query_article_content,
+	12000:query_image_url
+}
+
+var param = "";
 
 const server = http.createServer((req,res)=>{
+	res.writeHead(200, { 'Content-Type': 'text/json' });
 	var url = URL.parse(req.url);
-	var param = qs.parse(url.query);
+	param = qs.parse(url.query);
+	var res_data = "";
 
-	var sql = " select * from spider_article_list limit ?,? ";
-	var params = [0,20];
-	execute_sql(sql,params,function(results){
-		res.writeHead(200, { 'Content-Type': 'text/json' });
-		res.write(JSON.stringify(results));
+	if(!param["key"]){
+		res_data = {flag:0,msg:"params error: param @key is not exists"};
+		res.write(JSON.stringify(res_data));
+		res.end();
+	}else if(!Router[param["key"]]){
+		res_data = {flag:0,msg:"params error: key "+param["key"]+" is not exists"};
+		res.write(JSON.stringify(res_data));
+		res.end();
+	}
+
+	Router[param["key"]].call(null,function(results){
+		res_data = results ; 
+		res.write(JSON.stringify(res_data));
 		res.end();
 	});
+
 }).listen(8888);
+
+server.on("close",()=>{
+	close_poll();
+});
+
+
+function query_article_list(callback){
+	var sql = " select * from spider_article_list limit ?,? ";
+	var params = [0,20];
+
+	execute_sql(sql,params,callback);
+}
+
+function query_article_content(callback){
+
+}
+
+function query_image_url(callback){
+
+}
+
 
 function execute_sql(sql,params,callback){
 	if( !mysql_pool ){
