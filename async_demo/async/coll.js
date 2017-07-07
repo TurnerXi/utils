@@ -51,6 +51,55 @@ module.exports={
 				resolve(results);
 			})
 		});
+	},
+	test_each : function(arr){
+		return new Promise(function(resolve,reject){
+			async.each(arr,query_article_by_id,function(err){
+				if(err){
+					reject(err);	
+				}else{
+					resolve("");	
+				}
+				
+			})
+		});
+	},
+	test_eachLimit  : function(arr,limit){
+		return new Promise(function(resolve,reject){
+			async.eachLimit(arr,limit,query_article_by_id,function(err){
+				if(err){
+					reject(err);	
+				}else{
+					resolve("");	
+				}
+			})
+		});
+	},
+	test_eachOf  : function(arr){
+		return new Promise(function(resolve,reject){
+			async.eachOf(arr,function(item,key,callback){
+				query_article_by_id(item,callback);
+			},function(err){
+				if(err){
+					reject(err);	
+				}else{
+					resolve("");	
+				}
+			});
+		});
+	},
+	test_eachOfLimit  : function(arr,limit){
+		return new Promise(function(resolve,reject){
+			async.eachOfLimit(arr,limit,function(item,key,callback){
+				query_article_by_id(item,callback);
+			},function(err){
+				if(err){
+					reject(err);	
+				}else{
+					resolve("");	
+				}
+			});
+		});
 	}
 }
 

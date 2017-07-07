@@ -31,6 +31,26 @@ describe("async模块collection测试",function(){
 		return coll.test_detectSeries([0,2,3]).then(function(data,err){
 			expect(2).to.equal(data);
 		});
-	})
+	});
+	it("each测试：parallel=>async.each(arr,async function(item,callback),funciton(err))",function(){
+		return coll.test_each([1,2,3]).then(function(data,err){
+			expect(data).to.be.empty;
+		});
+	});
+	it("eachLimit测试：parallel=>async.eachLimit(arr,limit,async function(item,callback),funciton(err))",function(){
+		return coll.test_eachLimit([1,2,3],2).then(function(data,err){
+			expect(data).to.be.empty;
+		});
+	});
+	it("eachOf测试：parallel=>async.eachOf(arr,async function(item,index,callback),funciton(err))",function(){
+		return coll.test_eachOf([1,2,3]).then(function(data,err){
+			expect(data).to.be.empty;
+		});
+	});
+	it("eachOfLimit测试：parallel=>async.eachOfLimit(arr,limit,async function(item,index,callback),funciton(err))",function(){
+		return coll.test_eachOfLimit([1,2,3],2).then(function(data,err){
+			expect(data).to.be.empty;
+		});
+	});
 })
  
