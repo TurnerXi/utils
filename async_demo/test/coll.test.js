@@ -17,40 +17,29 @@ describe("async模块collection测试",function(){
 			expect(data).to.be.an("array");
 		});
 	});
-	it("detect测试：parallel=>async.detect(arr,async function(arr) return bool,callback(err,arr[n once bool returns true])) ",function(){
+	it("detect测试：async.detect(arr,async function(arr) return bool,callback(err,arr[n once bool returns true])) ",function(){
 		return coll.test_detect([1,2,3]).then(function(data,err){
 			expect([1,2,3]).to.include(data);
 		});
 	});
-	it("detectLimit测试：parallel=>async.detectLimit(arr,limit[parallel num once],async function(err) return bool,callback(err,arr[n once bool returns true]))",function(){
-		return coll.test_detectLimit([1,2,3],2).then(function(data,err){
-			expect([1,2]).to.include(data);
-		});
-	});
-	it("detectSeries测试：series=>async.detectSeries(arr,async function(arr) return bool,callback(err,arr[n once bool returns true]))",function(){
-		return coll.test_detectSeries([0,2,3]).then(function(data,err){
-			expect(2).to.equal(data);
-		});
-	});
-	it("each测试：parallel=>async.each(arr,async function(item,callback),funciton(err))",function(){
+	it("each测试：async.each(arr,async function(item,callback),funciton(err))",function(){
 		return coll.test_each([1,2,3]).then(function(data,err){
 			expect(data).to.be.empty;
 		});
 	});
-	it("eachLimit测试：parallel=>async.eachLimit(arr,limit,async function(item,callback),funciton(err))",function(){
-		return coll.test_eachLimit([1,2,3],2).then(function(data,err){
-			expect(data).to.be.empty;
-		});
-	});
-	it("eachOf测试：parallel=>async.eachOf(arr,async function(item,index,callback),funciton(err))",function(){
+	it("eachOf测试：async.eachOf(arr,async function(item,index,callback),funciton(err))",function(){
 		return coll.test_eachOf([1,2,3]).then(function(data,err){
 			expect(data).to.be.empty;
 		});
 	});
-	it("eachOfLimit测试：parallel=>async.eachOfLimit(arr,limit,async function(item,index,callback),funciton(err))",function(){
-		return coll.test_eachOfLimit([1,2,3],2).then(function(data,err){
-			expect(data).to.be.empty;
+	it("every测试：async.every(arr,async function(item,callback),funciton(err,result[called immediatly if callback return false])",function(){
+		return coll.test_every([0,2,3]).then(function(data,err){
+			// data value:
+			// all pass =>true
+			// one fail =>false immediatly
+			expect(data).to.not.be.ok;
 		});
 	});
+
 })
  

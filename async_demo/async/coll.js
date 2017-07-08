@@ -75,6 +75,17 @@ module.exports={
 			})
 		});
 	},
+	test_eachSeries  : function(arr){
+		return new Promise(function(resolve,reject){
+			async.eachSeries(arr,query_article_by_id,function(err){
+				if(err){
+					reject(err);	
+				}else{
+					resolve("");	
+				}
+			});
+		});
+	},
 	test_eachOf  : function(arr){
 		return new Promise(function(resolve,reject){
 			async.eachOf(arr,function(item,key,callback){
@@ -100,6 +111,30 @@ module.exports={
 				}
 			});
 		});
+	},
+	test_eachOfSeries  : function(arr){
+		return new Promise(function(resolve,reject){
+			async.eachOfSeries(arr,function(item,key,callback){
+				query_article_by_id(item,callback);
+			},function(err){
+				if(err){
+					reject(err);	
+				}else{
+					resolve("");	
+				}
+			});
+		});
+	},
+	test_every  : function(arr){
+		return new Promise(function(resolve,reject){
+			async.every(arr,query_article_by_id,function(err,result){
+				if(err){
+					reject(err);	
+				}else{
+					resolve(result);	
+				}
+			});
+		});
 	}
 }
 
@@ -107,9 +142,10 @@ module.exports={
 function query_article_by_id(id,callback){
 	var sql = "select * from spider_article_list where id = ?";
 	var result ;
+	console.log("---------src: "+id+"-----------");
 	execute_sql(sql,[id],function(res){
-		console.log(res[0] && res[0].title);
-		callback(null,res[0] && res[0].title);
+		console.log("---------dist: "+(res[0] && res[0].id)+"-----------");
+		callback(null,res[0] && res[0].id);
 	});
 }
 
