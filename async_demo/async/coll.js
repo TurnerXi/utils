@@ -135,6 +135,29 @@ module.exports={
 				}
 			});
 		});
+	},
+	test_applyEach : function(fns,arg1,arg2){
+
+		return new Promise(function(resolve,reject){
+			var callback1 = function(){
+				console.log("resolving1...");
+			};
+			var callback2 = function(){
+				console.log("resolving2...");
+			};
+			async.applyEach(fns,arg1,arg2,callback1,callback2);
+		});
+	},
+	test_auto : function(fnsobj,limit){
+		return new Promise(function(resolve,reject){
+			async.auto(fnsobj,limit,function(err,results){
+				if(err){
+					reject(err);
+				}else{
+					resolve(results);
+				}
+			});
+		})
 	}
 }
 

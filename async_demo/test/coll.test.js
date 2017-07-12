@@ -1,6 +1,6 @@
 var coll = require("../async/coll.js");
 var expect = require('chai').expect;
-
+/*
 describe("async模块collection测试，说明：\r\n\r\n"+
 	"  每个方法都有三个参数，async.xxxx(coll,iteratee(item,callback),handler(err,result))\r\n"+
 	"  coll：一个集合，集合中的每个元素作为iteratee的item\r\n"+
@@ -88,4 +88,37 @@ describe("async模块collection测试，说明：\r\n\r\n"+
 	});
 
 })
+*/
+
+var laugh = function(callback){
+	console.log(" laughing....");
+	callback(null,"laughing....");
+}
+var cry = function(callback){
+	console.log(" cry....");
+	callback("cry fail...","cry.....");
+}
+/*
+// 主函数中的所有参数都依次作为每个子函数的参数,最后一个参数如果是回调方法则会当所有子函数执行完后才执行
+coll.test_applyEach([laugh,cry],"snooby","test");
  
+*/
+
+/*
+// 自动任务，并行执行回调方法向下返回结果（err,results），串行接收依赖函数返回结果集合并执行回调方法向下返回结果(results,callback)，所有函数执行完毕后执行最终回调方法（err,results）,中途抛出错误，流程立即停止
+coll.test_auto({
+	laugh : laugh,
+	cry : cry,
+	eat : ["laugh","cry",function(results,callback){
+		console.log(results);
+		callback("eat fail..",null);
+	}]
+},2).then(function(data,err){
+	if(err){
+		console.log("stoping...");
+	}else{
+		console.log(data);
+	}
+})
+*/
+
