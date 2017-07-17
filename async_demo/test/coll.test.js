@@ -1,7 +1,8 @@
 var coll = require("../async/coll.js");
 var expect = require('chai').expect;
-/*
-describe("async模块collection测试，说明：\r\n\r\n"+
+const addContext = require('mochawesome/addContext');
+
+describe("async模块collection测试，说明：\\r\\n"+
 	"  每个方法都有三个参数，async.xxxx(coll,iteratee(item,callback),handler(err,result))\r\n"+
 	"  coll：一个集合，集合中的每个元素作为iteratee的item\r\n"+
 	"  iteratee：处理集合中每一个元素的子函数，集合中的每个元素作为第一个入参，第二个入参是系统的一个回调方法，iteratee向其传入的参数与handler有密切关系\r\n"+
@@ -88,37 +89,46 @@ describe("async模块collection测试，说明：\r\n\r\n"+
 	});
 
 })
-*/
 
-var laugh = function(callback){
-	console.log(" laughing....");
-	callback(null,"laughing....");
-}
-var cry = function(callback){
-	console.log(" cry....");
-	callback("cry fail...","cry.....");
-}
-/*
-// 主函数中的所有参数都依次作为每个子函数的参数,最后一个参数如果是回调方法则会当所有子函数执行完后才执行
-coll.test_applyEach([laugh,cry],"snooby","test");
+describe("async模块Control Flow测试",function(){
+	
+	it("applyEach【遍历应用】测试：并行遍历，统一回调",function(){
+		addContext(this, "主函数中的所有参数都依次作为每个子函数的参数,最后一个参数如果是回调方法则会当所有子函数执行完后才执行");
+		var laugh = function(arg1,arg2,callback1,callback2){
+			callback1(arg1+arg2+"laughing....");
+			callback2("all finished....");
+		}
+		var cry = function(arg1,arg2,callback1,callback2){
+			callback1(arg1+arg2+"cry.....");
+			callback2("all finished....");
+		}	
+		return coll.test_applyEach([laugh,cry],"snooby","test",function(result){
+			console.log("callback1:"+result);
+		},function(results){
+			console.log("callback2:"+results);
+		});
+	});
+
+	it("auto【自动任务】测试：自动切换流程控制，返回结果映射",function(){
+		addContext(this, "1.无依赖方法参数为（callback）,callback返回结果");
+		addContext(this, "2.有依赖方法参数为（results, callback）,resutls为所依赖方法结果映射");
+		addContext(this, "3.所有函数执行完毕后执行最终回调方法（err,results）,中途抛出错误，流程立即停止");
+		var laugh = function(callback){
+			callback(null,"laughing....");
+		}
+		var cry = function(callback){
+			callback(null,"cry.....");
+		}	
+		return coll.test_auto({
+			laugh : laugh,
+			cry : cry,
+			eat : ["laugh","cry",function(results,callback){
+				console.log(results);
+				callback(null,"eat all..");
+			}]
+		},2,function(err,results){
+			console.log("所有结果集合:"+results);
+		});
+	});
+});
  
-*/
-
-/*
-// 自动任务，并行执行回调方法向下返回结果（err,results），串行接收依赖函数返回结果集合并执行回调方法向下返回结果(results,callback)，所有函数执行完毕后执行最终回调方法（err,results）,中途抛出错误，流程立即停止
-coll.test_auto({
-	laugh : laugh,
-	cry : cry,
-	eat : ["laugh","cry",function(results,callback){
-		console.log(results);
-		callback("eat fail..",null);
-	}]
-},2).then(function(data,err){
-	if(err){
-		console.log("stoping...");
-	}else{
-		console.log(data);
-	}
-})
-*/
-

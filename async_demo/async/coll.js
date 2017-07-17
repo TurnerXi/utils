@@ -136,16 +136,12 @@ module.exports={
 			});
 		});
 	},
-	test_applyEach : function(fns,arg1,arg2){
-
+	test_applyEach : function(fns,arg1,arg2,callback1,callback2){
 		return new Promise(function(resolve,reject){
-			var callback1 = function(){
-				console.log("resolving1...");
-			};
-			var callback2 = function(){
-				console.log("resolving2...");
-			};
-			async.applyEach(fns,arg1,arg2,callback1,callback2);
+			async.applyEach(fns,arg1,arg2,callback1,function(results){
+				callback2(results);
+				resolve();
+			});
 		});
 	},
 	test_auto : function(fnsobj,limit){
