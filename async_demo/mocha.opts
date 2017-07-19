@@ -1,0 +1,2 @@
+--reporter mochawesome 
+--reporter-options reportDir=reporter,reportFilename=index,reportTitle=Async_Mocha_Test,reportPageTitle=Async_Mocha_Test_By_Tunrer
