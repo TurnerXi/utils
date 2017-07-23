@@ -140,7 +140,7 @@ module.exports={
 		return new Promise(function(resolve,reject){
 			async.applyEach(fns,arg1,arg2,callback1,function(results){
 				callback2(results);
-				resolve();
+				resolve(results);
 			});
 		});
 	},
@@ -153,6 +153,17 @@ module.exports={
 					resolve(results);
 				}
 			});
+		})
+	},
+	test_autoInject : function(fnsobj){
+		return new Promise(function(resolve,reject){
+			async.autoInject(fnsobj,function(err,results){
+				if(err){
+					reject(err);
+				}else{
+					resolve(results);
+				}
+			})
 		})
 	}
 }

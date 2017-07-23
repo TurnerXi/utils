@@ -90,6 +90,8 @@ describe("async模块Control Flow测试",function(){
 			console.log("callback1:"+result);
 		},function(results){
 			console.log("callback2:"+results);
+		}).then(function(data,err){
+			expect(data).to.be.eq("all finished....");
 		});
 	});
 
@@ -110,9 +112,30 @@ describe("async模块Control Flow测试",function(){
 				console.log(results);
 				callback(null,"eat all..");
 			}]
-		},2,function(err,results){
-			console.log("所有结果集合:"+results);
+		},2).then(function(data,err){
+			expect(data).to.be.an("Object");
 		});
 	});
+
+	it("autoInject【依赖注入】测试：auto的依赖注入版本",function(){
+		addContext(this, "相较于auto有更纯净的语法糖，自动注入将依赖方法的结果作为参数直接传递");
+		var laugh = function(callback){
+			callback(null,"laughing....");
+		}
+		var cry = function(callback){
+			callback(null,"cry.....");
+		}	
+		return coll.test_autoInject({
+			laugh : laugh,
+			cry : cry,
+			eat : ["laugh","cry",function(laugh,cry,callback){
+				console.log("laugh:"+laugh);
+				console.log("cry:"+cry);
+				callback(null,"eat all..");
+			}]
+		}).then(function(data,err){
+			expect(data).to.be.an("Object");
+		});
+	})
 });
  
