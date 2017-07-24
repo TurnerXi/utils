@@ -165,6 +165,12 @@ module.exports={
 				}
 			})
 		})
+	},
+	test_cargo : function(fns,payload){
+		return new Promise(function(resolve,reject){
+			var cargo = async.cargo(fns,payload);
+			resolve(cargo);
+		});
 	}
 }
 

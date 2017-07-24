@@ -136,6 +136,22 @@ describe("async模块Control Flow测试",function(){
 		}).then(function(data,err){
 			expect(data).to.be.an("Object");
 		});
-	})
+	});
+
+	it("cargo【搬运】测试：监听每一批task入栈并处理",function(){
+		addContext(this,"一个worker处理多个task，task处理完成后调用回调方法，payload表示每一批的task数量,不指定则为无限制");
+		return coll.test_cargo(function(tasks,callback){
+			console.log(tasks);
+			callback.call();
+		},2).then(function(data,err){
+			data.push({name:"andy"},function(err){
+				console.log("andy say hi ");
+			});
+			data.push({name:"turner"},function(err){
+				console.log("turner say hi ");
+			});
+			expect(data).to.be.an("object");
+		})		
+	});
 });
  
