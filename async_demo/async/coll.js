@@ -171,6 +171,25 @@ module.exports={
 			var cargo = async.cargo(fns,payload);
 			resolve(cargo);
 		});
+	},
+	test_compose : function(func1,func2,n){
+		return new Promise(function(resolve,reject){
+			var compose = async.compose(func1,func2);
+			compose(n,function(err,result){
+				resolve(result);
+			})
+		})
+	},
+	test_whilst : function(test,func){
+		return new Promise(function(resolve,reject){
+			async.whilst(test,func,function(err,results){
+				if(err){
+					reject(err);
+				}else{
+					resolve(results);
+				}
+			});
+		})
 	}
 }
 

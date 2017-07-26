@@ -153,5 +153,43 @@ describe("async模块Control Flow测试",function(){
 			expect(data).to.be.an("object");
 		})		
 	});
+
+	it("compose【组合】测试：将若干嵌套方法组合起来倒序执行",function(){
+		addContext(this,"若干方法倒序依次执行( f(), g(), h()==f(g(h())) )，前一方法的返回值作为参数传递给下一方法");
+		function add1(n, callback) {
+		    setTimeout(function () {
+		    	console.log("add:"+n);//4
+		        callback(null, n + 1);
+		    }, 10);
+		}
+
+		function mul3(n, callback) {
+		    setTimeout(function () {
+		    	console.log("mul:"+n);//5
+		        callback(null, n * 3);
+		    }, 10);
+		}
+		return coll.test_compose(mul3,add1,4).then(function(data,err){
+			expect(data).to.be.equal(15);
+		});		
+	});
+
+	it("whilst【循环】测试：异步循环，当方法体真正执行完毕调用回调方法时才进入下一次循环",function(){
+		addContext(this,"test返回结果作为循环条件，当条件为真时执行iteratee，iteratee调用回调方法时结束本次循环，进入下次循环，当循环完毕后执行callback，并将最终结果传入callback");
+		var count = 0;
+		function test(){
+			console.log("count:"+count);//0,1,2,3,4,5
+			return count<5;
+		}
+		function iteratee(callback){
+			count++;
+	        setTimeout(function() {
+	            callback(null, count);
+	        }, 10);
+		}
+		return coll.test_whilst(test,iteratee).then(function(data,err){
+			expect(data).to.be.equal(5);
+		});
+	});
 });
  
