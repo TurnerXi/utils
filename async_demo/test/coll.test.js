@@ -183,13 +183,108 @@ describe("async模块Control Flow测试",function(){
 		}
 		function iteratee(callback){
 			count++;
+			var delayTime = 10;
+			if(count==4){
+				delayTime = 30;
+			}
 	        setTimeout(function() {
 	            callback(null, count);
-	        }, 10);
+	        }, delayTime);
 		}
 		return coll.test_whilst(test,iteratee).then(function(data,err){
 			expect(data).to.be.equal(5);
 		});
 	});
+
+	it("during【循环】测试：whilist的异步校验版本，最终结果不返回数据",function(){
+		addContext(this,"test返回结果作为循环条件，当条件为真时执行iteratee，iteratee调用回调方法时结束本次循环，进入下次循环，当循环完毕后执行callback");
+		var count = 0;
+		function test(callback){
+			console.log("count:"+count);//0,1,2,3,4,5
+			var delayTime = 10;
+			if(count==2){
+				delayTime = 30;
+			}
+	        setTimeout(function(){
+	        	callback(null,count<5);
+	        }, delayTime);
+			
+		}
+		function iteratee(callback){
+			count++;
+			var delayTime = 10;
+			if(count==4){
+				delayTime = 30;
+			}
+	        setTimeout(callback, delayTime);
+		}
+		return coll.test_during(test,iteratee).then(function(data,err){
+			expect(data).to.be.equal(null);
+		});
+	});
+
+	it("until【循环】测试：whilist的相反校验版本",function(){
+		addContext(this,"test返回结果作为循环条件，直到条件为真时停止执行iteratee，iteratee调用回调方法时结束本次循环，进入下次循环，当循环完毕后执行callback，并将最终结果传入callback");
+		var count = 0;
+		function test(){
+			console.log("count:"+count);//0,1,2,3,4,5
+			return count>=5;
+		}
+		function iteratee(callback){
+			count++;
+			var delayTime = 10;
+			if(count==4){
+				delayTime = 30;
+			}
+	        setTimeout(function() {
+	            callback(null, count);
+	        }, delayTime);
+		}
+		return coll.test_until(test,iteratee).then(function(data,err){
+			expect(data).to.be.equal(5);
+		});
+	});
+
+	it("doWhilst【循环】测试：与whilist相同，但先进入循环再校验条件",function(){
+		addContext(this,"首先执行iteratee，再校验test，当条件为真时进入下一次循环，当循环完毕后执行callback，并将最终结果传入callback");
+		var count = 0;
+		function test(){
+			console.log("count:"+count);//1,2,3,4,5
+			return count<5;
+		}
+		function iteratee(callback){
+			count++;
+			var delayTime = 10;
+			if(count==4){
+				delayTime = 30;
+			}
+	        setTimeout(function() {
+	            callback(null, count);
+	        }, delayTime);
+		}
+		return coll.test_doWhilst(iteratee,test).then(function(data,err){
+			expect(data).to.be.equal(5);
+		});
+	});
+
+	it("forever【无限循环】测试：需要继续循环时调用next，next参数不为空时结束循环",function(){
+		addContext(this,"进入循环后调用next进入下一次循环，当next参数不为空时结束循环");
+		var count = 0;
+		function iteratee(next){
+			console.log("count:"+count);//0,1,2,3,4
+			count++;
+			var delayTime = 10;
+			if(count<=4){
+				next();
+			}else{
+				next(count);
+			}
+		}
+		return coll.test_forever(iteratee).then(function(data,err){
+			expect(data).to.be.equal(5);
+		});
+	});
+
+	
 });
  

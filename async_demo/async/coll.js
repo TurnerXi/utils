@@ -190,6 +190,46 @@ module.exports={
 				}
 			});
 		})
+	},
+	test_during : function(test,func){
+		return new Promise(function(resolve,reject){
+			async.during(test,func,function(err){
+				if(err){
+					reject(err);
+				}else{
+					resolve(null);
+				}
+			});
+		})
+	},
+	test_until : function(test,func){
+		return new Promise(function(resolve,reject){
+			async.until(test,func,function(err,results){
+				if(err){
+					reject(err);
+				}else{
+					resolve(results);
+				}
+			});
+		})
+	},
+	test_doWhilst : function(func,test){
+		return new Promise(function(resolve,reject){
+			async.doWhilst(func,test,function(err,results){
+				if(err){
+					reject(err);
+				}else{
+					resolve(results);
+				}
+			});
+		})
+	},
+	test_forever : function(func){
+		return new Promise(function(resolve,reject){
+			async.forever(func,function(data){
+				resolve(data);
+			});
+		})
 	}
 }
 
