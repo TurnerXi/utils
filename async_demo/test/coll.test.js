@@ -285,6 +285,71 @@ describe("async模块Control Flow测试",function(){
 		});
 	});
 
-	
+	it("parallel【并行】测试：并行调用funcs，结果为所有方法返回值的有序集合",function(){
+		addContext(this,"并行执行funcs，所有func执行完毕后调用callback，results为所有方法返回值的有序集合");
+		function func1(callback){
+			setTimeout(function(){
+				console.log("one");
+				callback(null,"one");
+			},200);
+		}
+		function func2(callback){
+			setTimeout(function(){
+				console.log("two");
+				callback(null,"two");
+			},100);
+		}
+		return coll.test_parallel([func1,func2]).then(function(data,err){
+			console.log(data);
+			expect(data[0]).to.equal("one");
+		});
+	});
+
+	it("queue【队列】测试：一个worker处理所有push进来的task",function(){
+		addContext(this,"与cargo类似，本质上是串行处理task，上一个task处理完成后才会处理下一个task");
+		var count = 0;
+		function worker(task,callback){
+			count ++ ;
+			callback();
+		}
+		return coll.test_queue(worker,2).then(function(data,err){
+			data.push({name:"jim"},function(err){
+				console.log("have say hi to jim");	
+			});
+			data.push({name:"tom"},function(err){
+				console.log("have say hi to tom");
+			});
+			data.push({name:"lily"},function(err){
+				console.log("have say hi to lily");
+			});
+			data.unshift({name:"jim"},function(err){
+				console.log("say hi to jim again");
+			});
+			data.drain = function(){
+				console.log("all task have bean executed ");
+				expect(count).to.be.equal(5);
+			}
+		});
+	});
+
+	it("race【竞赛】测试：第一个func完成将返回值传递给callback，并立即执行callback",function(){
+		addContext(this,"callback可以获取优先返回的值");
+		function func1(callback){
+			setTimeout(function(){
+				console.log("one");
+				callback(null,"one");
+			},200);
+		}
+		function func2(callback){
+			setTimeout(function(){
+				console.log("two");
+				callback(null,"two");
+			},100);
+		}
+		return coll.test_race([func1,func2]).then(function(data,err){
+			console.log(data);
+			expect(data).to.equal("two");
+		});
+	});
 });
  

@@ -230,6 +230,34 @@ module.exports={
 				resolve(data);
 			});
 		})
+	},
+	test_parallel : function(funcs){
+		return new Promise(function(resolve,reject){
+			async.parallel(funcs,function(err,results){
+				if(err){
+					reject(err);
+				}else{
+					resolve(results);
+				}
+			});
+		})
+	},
+	test_queue : function(worker,concurrency){
+		return new Promise(function(resolve,reject){
+			var q = async.queue(worker,concurrency);
+			resolve(q);
+		});
+	},
+	test_race : function(funcs){
+		return new Promise(function(resolve,reject){
+			async.race(funcs,function(err,results){
+				if(err){
+					reject(err);
+				}else{
+					resolve(results);
+				}
+			});
+		});
 	}
 }
 
